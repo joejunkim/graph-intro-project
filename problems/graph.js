@@ -5,25 +5,46 @@ class Graph {
     }
 
     addVertex(vertex) {
-        if(!this.adjList[vertex]) {
-            this.adjList[vertex] = [];
-        }
+      if(!this.adjList[vertex]) {
+          this.adjList[vertex] = [];
+      }
     }
 
     addEdges(srcValue, destValue) {
-        if(!this.adjList[srcValue]) this.addVertex(srcValue);
-        if(!this.adjList[destValue]) this.addVertex(destValue);
-        console.log(this.adjList);
-        // if(!this.adjList[srcValue]) this.adjList[srcValue].push(destValue);
-        // if(!this.adjList[destValue]) this.adjList[destValue].push(srcValue);
+      this.addVertex(srcValue);
+      this.addVertex(destValue);
+
+      const srcNeighbors = this.adjList[srcValue];
+      const destNeighbors = this.adjList[destValue];
+
+      if (!srcNeighbors.includes(destValue)) srcNeighbors.push(destValue);
+      if (!destNeighbors.includes(srcValue)) destNeighbors.push(srcValue);
     }
 
     buildGraph(edges) {
-        // Code goes here ...
+      edges.forEach(edge => { this.addEdges(edge[0], edge[1]) })
+      return this.adjList;
     }
 
     breadthFirstTraversal(startingVertex) {
-        // Code goes here ...
+      const queueArray = [startingVertex];
+      const sortedVals = [];
+      const visited = new Set();
+      visited.add(startingVertex);
+
+      while (queueArray.length) {
+        const currentNode = queueArray.shift();
+        const currNodeNeighbors = this.adjList[currentNode];
+        currNodeNeighbors.forEach(neighbor => {
+          if (!visited.has(neighbor)) {
+            queueArray.push(neighbor);
+            visited.add(neighbor);
+          }
+        })
+        sortedVals.push(currentNode);
+      }
+
+      return sortedVals;
     }
 
     depthFirstTraversalIterative(startingVertex) {
@@ -39,12 +60,3 @@ class Graph {
 module.exports = {
     Graph
 };
-
-
-
-
-
-
-
-
-
